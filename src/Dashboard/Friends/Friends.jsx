@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FriendCard from "../../Components/FriendCard";
 import "./Friends.css";
+import { baseUrl } from "../../../api";
 
 const Friends = () => {
   const userId = parseInt(localStorage.getItem("userId"));
@@ -31,28 +32,28 @@ const Friends = () => {
   useEffect(() => {
     if (!userId) return;
 
-    axios.get(`http://localhost:3000/users/${userId}`).then((res) => {
+    axios.get(`${baseUrl}/users/${userId}`).then((res) => {
       setUser(res.data);
     });
 
-    axios.get(`http://localhost:3000/friends/list/${userId}`).then((res) => {
+    axios.get(`${baseUrl}/friends/list/${userId}`).then((res) => {
       setFriends(res.data);
     });
 
     // Загрузить входящие заявки
     axios
-      .get(`http://localhost:3000/friends/requests/incoming/${userId}`)
+      .get(`${baseUrl}/friends/requests/incoming/${userId}`)
       .then((res) => setIncomingRequests(res.data));
 
     // Загрузить отправленные заявки
     axios
-      .get(`http://localhost:3000/friends/requests/outgoing/${userId}`)
+      .get(`${baseUrl}/friends/requests/outgoing/${userId}`)
       .then((res) => setOutgoingRequests(res.data));
   }, [userId]);
 
   const handleRemove = async (id) => {
     try {
-      await axios.post("http://localhost:3000/friends/remove", {
+      await axios.post(baseUrl+"/friends/remove", {
         userId,
         friendId: id,
       });
@@ -67,7 +68,7 @@ const Friends = () => {
     setMessage("");
     setSearchResult(null);
     try {
-      const res = await axios.get(`http://localhost:3000/users/by-code/${friendCode}`);
+      const res = await axios.get(`${baseUrl}/users/by-code/${friendCode}`);
       setSearchResult(res.data);
     } catch (err) {
       setMessage("Пользователь не найден");
@@ -77,7 +78,7 @@ const Friends = () => {
   const handleSendRequest = async () => {
     if (!searchResult) return;
     try {
-      await axios.post("http://localhost:3000/friends/request", {
+      await axios.post(baseUrl+"/friends/request", {
         senderId: userId,
         receiverId: searchResult.id,
       });
@@ -86,7 +87,7 @@ const Friends = () => {
       setFriendCode("");
 
       // Обновить список отправленных заявок
-      axios.get(`http://localhost:3000/friends/requests/outgoing/${userId}`)
+      axios.get(`${baseUrl}/friends/requests/outgoing/${userId}`)
         .then((res) => setOutgoingRequests(res.data));
     } catch (err) {
       setMessage(err.response?.data?.error || "Ошибка при отправке заявки");
@@ -96,12 +97,12 @@ const Friends = () => {
   // Принять входящую заявку
   const handleAcceptRequest = async (requestId) => {
     try {
-      await axios.post("http://localhost:3000/friends/accept", { requestId });
+      await axios.post(baseUrl+"/friends/accept", { requestId });
       setMessage("Заявка принята!");
 
       // Обновляем списки
-      axios.get(`http://localhost:3000/friends/list/${userId}`).then((res) => setFriends(res.data));
-      axios.get(`http://localhost:3000/friends/requests/incoming/${userId}`).then((res) => setIncomingRequests(res.data));
+      axios.get(`${baseUrl}/friends/list/${userId}`).then((res) => setFriends(res.data));
+      axios.get(`${baseUrl}/friends/requests/incoming/${userId}`).then((res) => setIncomingRequests(res.data));
     } catch (err) {
       setMessage("Ошибка при принятии заявки");
     }
@@ -110,10 +111,10 @@ const Friends = () => {
   // Отменить исходящую заявку (по желанию)
   const handleCancelRequest = async (requestId) => {
     try {
-      await axios.post("http://localhost:3000/friends/request/cancel", { requestId });
+      await axios.post(baseUrl+"/friends/request/cancel", { requestId });
       setMessage("Заявка отменена");
 
-      axios.get(`http://localhost:3000/friends/requests/outgoing/${userId}`)
+      axios.get(`${baseUrl}/friends/requests/outgoing/${userId}`)
         .then((res) => setOutgoingRequests(res.data));
     } catch (err) {
       setMessage("Ошибка при отмене заявки");

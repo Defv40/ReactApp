@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CalendarSelector from "../../Components/CalendarSelector";
 import "./Home.css";
+import { baseUrl } from "../../../api";
 
 const Home = () => {
   // Форматирует дату для input type="date" (YYYY-MM-DD)
@@ -21,7 +22,7 @@ const Home = () => {
   useEffect(() => {
     if (!userId) return;
 
-    axios.get(`http://localhost:3000/users/${userId}`)
+    axios.get(`${baseUrl}/users/${userId}`)
       .then(res => {
         const user = res.data;
 
@@ -64,7 +65,7 @@ const Home = () => {
       birthDate: birthDate ? new Date(birthDate).toISOString() : null,
     };
 
-    axios.put(`http://localhost:3000/users/${userId}`, data)
+    axios.put(`${baseUrl}/users/${userId}`, data)
       .then(() => {
         alert("Информация сохранена!");
       })

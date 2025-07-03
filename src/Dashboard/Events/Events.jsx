@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Events.css";
+import { baseUrl } from "../../../api";
 
 const Events = () => {
   const userId = parseInt(localStorage.getItem("userId"));
@@ -18,7 +19,7 @@ const Events = () => {
 
   const fetchCommonDays = async (inviteeIds) => {
     try {
-      const res = await axios.get(`http://localhost:3000/users/common-workdays`, {
+      const res = await axios.get(`${baseUrl}/users/common-workdays`, {
         params: { ids: inviteeIds.join(',') }
       });
       setCommonDays(res.data.commonDays);
@@ -37,17 +38,17 @@ const Events = () => {
   if (!userId) return;
 
   // Получаем друзей
-  axios.get(`http://localhost:3000/friends/list/${userId}`)
+  axios.get(`${baseUrl}/friends/list/${userId}`)
     .then(res => setFriends(res.data))
     .catch(console.error);
 
   // Получаем активные встречи
-  axios.get(`http://localhost:3000/events/active/${userId}`)
+  axios.get(`${baseUrl}/events/active/${userId}`)
     .then(res => setActiveEvents(res.data))
     .catch(console.error);
 
   // Получаем прошедшие встречи
-  axios.get(`http://localhost:3000/events/past/${userId}`)
+  axios.get(`${baseUrl}/events/past/${userId}`)
     .then(res => setArchivedEvents(res.data))
     .catch(console.error);
 }, [userId]);
@@ -80,7 +81,7 @@ const Events = () => {
   if (!title.trim()) return alert("Введите название встречи");
 
   try {
-    const res = await axios.post("http://localhost:3000/events", {
+    const res = await axios.post(baseUrl+"/events", {
       creatorId: userId,
       title,
       description,
@@ -99,7 +100,7 @@ const Events = () => {
 
   const handleMarkAsPast = async (eventId) => {
   try {
-    const res = await axios.put(`http://localhost:3000/events/${eventId}/mark-past`);
+    const res = await axios.put(`${baseUrl}/events/${eventId}/mark-past`);
     const updated = res.data;
 
     setActiveEvents(prev => prev.filter(ev => ev.id !== eventId));

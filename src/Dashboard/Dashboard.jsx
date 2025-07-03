@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Dashboard.css";
+import { baseUrl } from "../../api";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Dashboard = () => {
     }
 
     axios
-      .get(`http://localhost:3000/users/${userId}`)
+      .get(baseUrl+`/users/${userId}`)
       .then((res) => setUser(res.data))
       .catch(() => {
         localStorage.removeItem("userId");

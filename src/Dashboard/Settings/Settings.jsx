@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Settings.css";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "../../../api";
 
 const Settings = () => {
   const userId = parseInt(localStorage.getItem("userId"));
@@ -15,7 +16,7 @@ const Settings = () => {
   useEffect(() => {
     if (!userId) return;
 
-    axios.get(`http://localhost:3000/users/${userId}`)
+    axios.get(baseUrl+`/users/${userId}`)
       .then(res => {
         setLogin(res.data.login);
       })
@@ -26,7 +27,7 @@ const Settings = () => {
 
   const handleSave = async () => {
     try {
-      const res = await axios.put(`http://localhost:3000/users/${userId}/settings`, {
+      const res = await axios.put(`${baseUrl}/users/${userId}/settings`, {
         login,
         password
       });
@@ -49,7 +50,7 @@ const Settings = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:3000/users/${userId}`);
+      await axios.delete(`${baseUrl}/users/${userId}`);
       localStorage.removeItem("userId");
       navigate("/login");
       alert("Аккаунт удалён");

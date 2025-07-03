@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
+import { baseUrl } from "../../api";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -29,7 +30,7 @@ const Register = () => {
     console.log(data);
     
     try {
-      await axios.post("http://localhost:3000/api/register", data);
+      await axios.post(baseUrl+"/api/register", data);
 
       // Перенаправление на логин после регистрации
       navigate("/login");
