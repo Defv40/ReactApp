@@ -1,0 +1,29 @@
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+}
+
+.calendar-day {
+  background-color: #1e1e1e;
+  color: #fff;
+  padding: 0.6rem;
+  text-align: center;
+  border: 1px solid #444;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day:hover {
+  background-color: #333;
+}
+
+.calendar-day.active {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.calendar-day.highlight {
+  border: 2px dashed #22c55e;
+}
